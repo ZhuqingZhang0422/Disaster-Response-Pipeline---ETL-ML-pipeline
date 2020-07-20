@@ -30,12 +30,13 @@ import pickle
 def load_data(database_filepath):
     #load data from 'ETL_pipeline_project'
     engine = create_engine('sqlite:///'+database_filepath)
-    df = pd.read_sql_table(database_filepath,engine)
+    df = pd.read_sql_table('messages_disaster',engine)
+    #df = df[:100]
     X = df['message']
     #Remove the unrelated columns
     Y = df.iloc[:,4:]
     category_names = list(df[:0])[4:]
-    return X , Y , category_names
+    return X , Y , category_names 
 
 
 def tokenize(text):
@@ -68,13 +69,7 @@ def build_model():
     return model
     
 
-def evaluate_model(model, X_test, Y_test, category_names):
-    '''
-    Evaluation report of the model, and print the F1 scores
-    Args:
-        Input: model, x_test and y_test
-        Output: evaluation report in text files 
-    '''
+def evaluate_model(model,X_test, Y_test, categories_names):
     '''
     Evaluation report of the model, and print the F1 scores
     Args:
@@ -82,11 +77,9 @@ def evaluate_model(model, X_test, Y_test, category_names):
         Output: evaluation report in text files 
     '''
     y_predict = model.predict(X_test)
-    # print model prediction report
-    print(classification_report(y_predict, Y_test.values, target_names=category_names))
-    # print raw accuracy score 
-    print('F1 Score:' + np.mean(Y_test.values == y_predict))
-
+    for index, col in enumerate(Y_test):
+        print(categories_names[index])
+        print(classification_report(Y_test[col], y_predict[:, index]))
 
 def save_model(model, model_filepath):
     # save ML model to a pickle file
