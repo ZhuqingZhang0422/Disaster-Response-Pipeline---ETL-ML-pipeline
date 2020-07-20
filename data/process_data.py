@@ -41,10 +41,10 @@ def clean_data(df):
     df.drop_duplicates(subset=None, keep='first', inplace=True)
     return df
     
-def save_data(df, database_filename):
-    engine = create_engine('sqlite:///'+database_filename)
-    df.to_sql(database_filename, engine, index=False) 
-
+def save_data(df, database_filepath):
+    
+    engine = create_engine('sqlite:///' + database_filepath)
+    df.to_sql('messages_disaster', engine, index=False)
 
 def main():
     if len(sys.argv) == 4:
