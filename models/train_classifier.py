@@ -28,6 +28,13 @@ import pickle
 
 
 def load_data(database_filepath):
+    '''
+    Load dataframe from SQL database
+    INPUT: file path of .db file
+    OUTPUT: X ---> messages column
+            Y ---> catagories column
+            Category_names ---> List of strings contain catagory names
+    '''
     #load data from 'ETL_pipeline_project'
     engine = create_engine('sqlite:///'+database_filepath)
     df = pd.read_sql_table('messages_disaster',engine)
@@ -40,6 +47,11 @@ def load_data(database_filepath):
 
 
 def tokenize(text):
+    '''
+    Tokenize and further nomalize text messages
+    INPUT: text messages
+    OUTPUT: processed messages
+    '''
     # normalize case and remove punctuation
     text = re.sub(r"[^a-zA-Z0-9]", " ", text.lower())
     # tokenize text
@@ -53,6 +65,10 @@ def tokenize(text):
 
 
 def build_model():
+    '''
+    Build up machine learning pipeline with grid search
+    OUTPUT: machine learning model
+    '''
     pipeline = Pipeline([
     # Estimater
     ('vect', CountVectorizer(tokenizer=tokenize)),
@@ -82,6 +98,11 @@ def evaluate_model(model,X_test, Y_test, categories_names):
         print(classification_report(Y_test[col], y_predict[:, index]))
 
 def save_model(model, model_filepath):
+    '''
+    Pack and save ML model
+    INPUT: ML pipeline, model_filepath
+    OUTPUT: ML model package
+    '''
     # save ML model to a pickle file
     pickle.dump(model, open(model_filepath, 'wb'))
 
