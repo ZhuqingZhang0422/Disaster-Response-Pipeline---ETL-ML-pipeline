@@ -50,8 +50,8 @@ def index():
         {
             'data': [
                 Bar(
-                    x=genre_names,
-                    y=genre_counts
+                    x = genre_names,
+                    y = genre_counts
                 )
             ],
 
@@ -62,6 +62,24 @@ def index():
                 },
                 'xaxis': {
                     'title': "Genre"
+                }
+            }
+        },
+        {
+            'data': [
+                Bar(
+                    x = category,
+                    y = category_pro
+                )
+            ],
+
+            'layout': {
+                'title': 'Proportional Distribution of Message Categories',
+                'yaxis': {
+                    'title': "Proportion of appearance in database"
+                },
+                'xaxis': {
+                    'title': "Category Name"
                 }
             }
         }
