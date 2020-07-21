@@ -27,7 +27,7 @@ def clean_data(df):
     row = df_cat.values.tolist()[0]
     new = []
     
-    for char in row[0:36]:
+    for char in row[0:37]:
         new.append(char.split('-')[0])
     # use this row to extract a list of new column names for categories.
     # one way is to apply a lambda function that takes everything 
@@ -40,7 +40,6 @@ def clean_data(df):
     # simplify contents in columns
     for char in new:
         df_cat[char] = df_cat[char].apply(lambda x:x.split('-')).apply(lambda y:y[1])
-        # Drop those rows with values other than 0 and 1
         df_cat.drop(df_cat[df_cat[char]>'1'].index,inplace = True)
     df_cat_new = df_cat
     
@@ -59,10 +58,8 @@ def save_data(df, database_filepath):
     INPUT: pandas dataframe, database_filepath
     OUTPUT: SQL database file table name 'messages_disaster'
     '''
-    
     engine = create_engine('sqlite:///' + database_filepath)
-    engine.text_factory = str
-    df.to_sql('messages_disaster', engine, index=False, if_exists = 'replace')
+    df.to_sql('messages_disaster', engine, index=False,if_exists = 'replace')
 
 def main():
     if len(sys.argv) == 4:
@@ -73,7 +70,7 @@ def main():
               .format(messages_filepath, categories_filepath))
           
         df = load_data(messages_filepath, categories_filepath)
-        
+        print(df.shape)
         print('Cleaning data...')
         df = clean_data(df)
         
